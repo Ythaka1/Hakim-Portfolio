@@ -16,7 +16,7 @@ export const STORY = [
 export const PROCESS_WORDS = ["Research", "Concept", "Design", "Live", "Publish"] as const;
 
 export const MOTHER_LINE =
-  "And behind every risk on this page is the woman who made risk feel safe — my mother. Much love, Mum.";
+  "And behind every risk on this page is the woman who made risk feel safe, my mother. Much love, Mum. 🤗";
 
 export const EMAIL = "hakimcastro41@gmail.com";
 
