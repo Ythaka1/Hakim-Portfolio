@@ -1,43 +1,48 @@
-# Hakim Waithaka Castro — Portfolio
+# Hakimmy — Portfolio
 
-Personal portfolio of **Hakim Waithaka Castro**, creative designer & developer, originally from Kenya. Open for any collaborations.
+Personal portfolio of **Hakim (Hakimmy)** — frontend developer & designer, 20, based in Nairobi, Kenya.
+
+Dark, cinematic, and quiet-luxury: signature-script identity, paired dark/light imagery, sound design, and physics-driven interactions.
 
 ## Stack
 
-Pure HTML / CSS / vanilla JavaScript — no frameworks, no build step. Deploy the folder as-is to GitHub Pages, Netlify, Vercel, or any static host.
+- **Next.js (App Router) + TypeScript + Tailwind CSS v4**
+- **Motion** (`motion/react`) for animation
+- **Lenis** for smooth inertia scroll
+- **Web Audio API** sound layer (synthesized tick / click / chime — zero-lag, swappable for real samples)
 
 ## Pages
 
-- `index.html` — hero, marquee, intro, contact footer
-- `works.html` — scroll-animated placeholder panels (real projects drop in later)
-- `about.html` — bio, capabilities, collaboration CTA
+| Route | What happens |
+| --- | --- |
+| `/` | Full-viewport hero; vertical scroll hijacked into horizontal panels — signature, five mantras, intro + cue |
+| `/about` | Opener, huge portrait reveal, "Shaped by …" one-line-at-a-time, the story with a self-drawing `hm` monogram, process words revealed word-by-word on scroll, mum appreciation, closing mantra marquee |
+| `/works` | 3D cylinder card carousel — continuous circular scroll, inertia damping, mouse-parallax tilt, volumetric card thickness, perspective 1350px, pure black stage |
+| `/contact` | Full-viewport magnetic email + social links (`#` placeholders) |
 
-## Features
+## Global layer
 
-- "Hakimmy" signature logo (Mrs Saint Delafield)
-- Custom cursor: orbiting star + lagging ring (hidden on touch devices)
-- Preloader with letter animation (shown once per session)
-- Page-transition veil, scroll reveals, film grain overlay
-- Works page: parallax drift + scroll-velocity skew on CSS-only art panels
-- Live Nairobi clock in the footer
-- Respects `prefers-reduced-motion`
+- Custom cursor (dot, scales over interactive elements)
+- Route transitions: full-screen wipe + View Transitions API where supported
+- Dark default · dark/light toggle with warm chime; images use the paired dark/light cross-fade pattern
+- Film grain overlay, muted-gold single accent, Ephesis / Cormorant Garamond / Manrope type stack
+- `prefers-reduced-motion` respected everywhere (static hero fallback, no autospin, native scroll)
+
+## Develop
+
+```sh
+npm install
+npm run dev    # http://localhost:3000
+npm run build && npm start
+```
 
 ## Environment variables
 
-Copy `.env.example` to `.env` and fill in the values. `.env` is gitignored — never commit real keys.
+Copy `.env.example` → `.env` (gitignored). `DTTO_API_KEY` is reserved for an upcoming integration — set it in your host's env settings when deploying.
 
-| Variable | Purpose |
-| --- | --- |
-| `DTTO_API_KEY` | Reserved for upcoming integration (not used by the static site yet). Set it in your hosting provider's environment settings when the integration lands. |
+## Dropping in real content
 
-## Run locally
-
-```sh
-python3 -m http.server 8000
-# then open http://localhost:8000
-```
-
-## Still to come
-
-- Real projects on the Works page
-- Background music toggle
+- **Images** → `/public/images` (see the README there for exact filenames)
+- **Projects** (titles, roles, stacks, links) → `src/lib/data.ts`
+- **Social URLs** → `src/lib/data.ts` (`SOCIALS`)
+- **Copy** (mantras, story, process) → `src/lib/data.ts`
