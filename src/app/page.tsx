@@ -113,7 +113,7 @@ function HeroPanel({
 
   return (
     <div className="flex h-full w-screen shrink-0 items-center justify-center px-8">
-      <motion.div style={{ opacity, x: shift }} className="max-w-[26ch] text-center">
+      <motion.div style={{ opacity, x: shift }} className="max-w-[46ch] text-center">
         {children}
       </motion.div>
     </div>
@@ -137,7 +137,7 @@ function PanelContent({ panel }: { panel: Panel }) {
     return (
       <div className="flex flex-col items-center gap-8">
         <div className="space-y-3">
-          <h2 className="font-display text-[clamp(1.7rem,4vw,3.2rem)] leading-[1.15] [text-wrap:balance]">
+          <h2 className="font-display text-[clamp(1.5rem,3.2vw,2.7rem)] leading-[1.2] [text-wrap:balance]">
             My name is Hakim Waithaka Castro
           </h2>
           <p className="text-sm md:text-base text-muted tracking-wide">
@@ -171,7 +171,7 @@ function QuoteCard({ text, label }: { text: string; label: string | null }) {
           className="h-28 w-24 md:h-36 md:w-30 rounded-[calc(0.75rem-0.25rem)]"
         />
       </div>
-      <p className="font-display text-[clamp(1.5rem,3.6vw,2.9rem)] leading-[1.2] [text-wrap:balance]">
+      <p className="font-display text-[clamp(1.35rem,2.9vw,2.4rem)] leading-[1.25] [text-wrap:balance]">
         {text}
       </p>
       {label && (
@@ -206,7 +206,7 @@ function HeroStatic() {
         Hakimmy
       </h1>
       {HERO_QUOTES.map((q) => (
-        <div key={q.text} className="max-w-[30ch]">
+        <div key={q.text} className="max-w-[46ch]">
           <QuoteCard text={q.text} label={q.label} />
         </div>
       ))}
