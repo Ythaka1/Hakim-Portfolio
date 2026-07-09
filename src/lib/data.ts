@@ -1,12 +1,22 @@
 /* Central content — edit copy here, not inside components. */
 
-export const MANTRAS = [
-  "The oak tree grows slower than the weed, but it survives every storm.",
-  "If they put a cross on your back, carry it — and silently carry it to the top.",
-  "It's you vs you.",
-  "Not every closed door is locked. Push.",
-  "Carpe diem.",
+/* Hero quote panels — framed portrait on top, quote, bracketed role label.
+   label: null renders frame + quote only. */
+export const HERO_QUOTES = [
+  {
+    text: "The oak tree grows slower than the weed, but it survives every storm.",
+    label: "Software Developer",
+  },
+  {
+    text: "If they put a cross on your back, carry it — and silently carry it to the top.",
+    label: "AI Developer",
+  },
+  { text: "It's you vs you.", label: "Designer" },
+  { text: "Not every closed door is locked. Push.", label: "Open for Collaborations" },
+  { text: "Carpe diem.", label: null },
 ] as const;
+
+export const MANTRAS = HERO_QUOTES.map((q) => q.text);
 
 export const STORY = [
   "It started in 2024 — the year building and designing stopped being a curiosity and became the thing I couldn't put down. I began where everyone begins: buried in YouTube tutorials at 2 a.m. Then I took the leap and joined a software engineering bootcamp — not to start from scratch, but to sharpen what was already there. Turns out I had a feel for it. The feedback from mentors, peers, and family was enough to make me believe I might actually go somewhere with this.",

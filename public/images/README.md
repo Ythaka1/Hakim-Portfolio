@@ -6,6 +6,7 @@ variant that cross-fade with the theme toggle.
 | File | Where it appears |
 | --- | --- |
 | `hero-cross-blur.jpg` / `hero-cross-blur-light.jpg` | Hero backdrop (heavily blurred, low contrast) |
+| `quote-portrait.jpg` / `quote-portrait-light.jpg` | Hero — small framed portrait above each quote |
 | `about-portrait-suit.jpg` / `about-portrait-suit-light.jpg` | About — huge scroll-reveal portrait |
 | `about-sitting.jpg` / `about-sitting-light.jpg` | About — second image |
 | `project-01-preview.jpg` … `project-06-preview.jpg` | Works — carousel card fronts (video also fine; adjust `CylinderCarousel`) |

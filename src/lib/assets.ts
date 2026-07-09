@@ -35,4 +35,11 @@ export const ASSETS = {
     light: "/images/about-sitting-light.jpg",
     alt: "Hakim, seated",
   },
+
+  /* quote-portrait.jpg — small framed portrait above each hero quote. */
+  quotePortrait: {
+    dark: "/images/quote-portrait.jpg",
+    light: "/images/quote-portrait-light.jpg",
+    alt: "Portrait",
+  },
 } satisfies Record<string, PairedAsset>;

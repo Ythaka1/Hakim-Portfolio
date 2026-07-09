@@ -1,8 +1,9 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useAmbient } from "./ambient";
 import { useSound } from "./sound";
 import { useTheme } from "./theme";
 import { TransitionLink } from "./transition";
@@ -94,6 +95,8 @@ export default function Nav() {
             </TransitionLink>
           ))}
 
+          <MuteToggle />
+
           <button
             type="button"
             onClick={toggle}
@@ -113,5 +116,41 @@ export default function Nav() {
         </nav>
       </header>
     </>
+  );
+}
+
+/* Ambient music mute — three equalizer bars that sway while playing. */
+function MuteToggle() {
+  const { muted, toggle } = useAmbient();
+  const { tick } = useSound();
+  const reduced = useReducedMotion();
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      onMouseEnter={tick}
+      aria-label={muted ? "Unmute background music" : "Mute background music"}
+      aria-pressed={!muted}
+      className="relative flex h-8 w-8 items-end justify-center gap-[3px] rounded-full border border-faint pb-[9px]"
+    >
+      {[0, 1, 2].map((i) => (
+        <motion.span
+          key={i}
+          className="w-[2.5px] rounded-full bg-current"
+          style={{ opacity: muted ? 0.35 : 1 }}
+          animate={
+            muted || reduced
+              ? { height: 4 }
+              : { height: [5, 11, 6, 12, 5] }
+          }
+          transition={
+            muted || reduced
+              ? { duration: 0.3 }
+              : { duration: 1.1 + i * 0.25, repeat: Infinity, ease: "easeInOut" }
+          }
+        />
+      ))}
+    </button>
   );
 }

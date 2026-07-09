@@ -11,7 +11,7 @@ import { useRef } from "react";
 import PairedImage from "@/components/PairedImage";
 import { TransitionLink } from "@/components/transition";
 import { ASSETS } from "@/lib/assets";
-import { MANTRAS } from "@/lib/data";
+import { HERO_QUOTES } from "@/lib/data";
 
 /*
  * HERO — full viewport, scroll-hijacked horizontal movement.
@@ -20,9 +20,14 @@ import { MANTRAS } from "@/lib/data";
  * stack instead.
  */
 
-const PANELS: { kind: "signature" | "mantra" | "outro"; text?: string }[] = [
+type Panel =
+  | { kind: "signature" }
+  | { kind: "quote"; text: string; label: string | null }
+  | { kind: "outro" };
+
+const PANELS: Panel[] = [
   { kind: "signature" },
-  ...MANTRAS.map((m) => ({ kind: "mantra" as const, text: m })),
+  ...HERO_QUOTES.map((q) => ({ kind: "quote" as const, text: q.text, label: q.label })),
   { kind: "outro" },
 ];
 
@@ -115,7 +120,7 @@ function HeroPanel({
   );
 }
 
-function PanelContent({ panel }: { panel: (typeof PANELS)[number] }) {
+function PanelContent({ panel }: { panel: Panel }) {
   if (panel.kind === "signature") {
     return (
       <motion.h1
@@ -131,10 +136,14 @@ function PanelContent({ panel }: { panel: (typeof PANELS)[number] }) {
   if (panel.kind === "outro") {
     return (
       <div className="flex flex-col items-center gap-8">
-        <p className="text-base md:text-lg text-muted tracking-wide">
-          Frontend developer &amp; designer.{" "}
-          <span className="text-fg">Nairobi.</span>
-        </p>
+        <div className="space-y-3">
+          <h2 className="font-display text-[clamp(1.7rem,4vw,3.2rem)] leading-[1.15] [text-wrap:balance]">
+            My name is Hakim Waithaka Castro
+          </h2>
+          <p className="text-sm md:text-base text-muted tracking-wide">
+            English &amp; Swahili by root, <span className="text-fg">German by design.</span>
+          </p>
+        </div>
         <TransitionLink
           href="/about"
           className="group flex items-center gap-4 rounded-full border border-faint py-3 pl-6 pr-2 text-[11px] uppercase tracking-[0.3em] transition-colors duration-500 hover:border-accent"
@@ -147,10 +156,32 @@ function PanelContent({ panel }: { panel: (typeof PANELS)[number] }) {
       </div>
     );
   }
+  return <QuoteCard text={panel.text} label={panel.label} />;
+}
+
+/* Framed-portrait quote layout: small framed portrait on top, the quote
+   centered below, a bracketed role label beneath (or none). */
+function QuoteCard({ text, label }: { text: string; label: string | null }) {
   return (
-    <p className="font-display text-[clamp(1.6rem,4.2vw,3.4rem)] leading-[1.15] [text-wrap:balance]">
-      {panel.text}
-    </p>
+    <div className="flex flex-col items-center gap-7 md:gap-9">
+      {/* quote-portrait.jpg — small framed portrait */}
+      <div className="rounded-xl border border-faint bg-fg/5 p-1.5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]">
+        <PairedImage
+          {...ASSETS.quotePortrait}
+          className="h-28 w-24 md:h-36 md:w-30 rounded-[calc(0.75rem-0.25rem)]"
+        />
+      </div>
+      <p className="font-display text-[clamp(1.5rem,3.6vw,2.9rem)] leading-[1.2] [text-wrap:balance]">
+        {text}
+      </p>
+      {label && (
+        <p className="text-[11px] uppercase tracking-[0.3em] text-muted">
+          <span className="text-accent">[</span>
+          <span className="mx-3">{label}</span>
+          <span className="text-accent">]</span>
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -170,18 +201,23 @@ function ScrollCue({ progress }: { progress: MotionValue<number> }) {
 /* Reduced motion: same content, plain vertical flow. */
 function HeroStatic() {
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-16 px-8 py-32 text-center">
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-20 px-8 py-32 text-center">
       <h1 className="font-signature text-[clamp(4rem,14vw,11rem)] leading-none -rotate-2">
         Hakimmy
       </h1>
-      {MANTRAS.map((m) => (
-        <p key={m} className="font-display max-w-[28ch] text-2xl md:text-4xl leading-snug">
-          {m}
-        </p>
+      {HERO_QUOTES.map((q) => (
+        <div key={q.text} className="max-w-[30ch]">
+          <QuoteCard text={q.text} label={q.label} />
+        </div>
       ))}
-      <p className="text-muted">
-        Frontend developer &amp; designer. <span className="text-fg">Nairobi.</span>
-      </p>
+      <div className="space-y-3">
+        <h2 className="font-display text-3xl md:text-5xl leading-tight">
+          My name is Hakim Waithaka Castro
+        </h2>
+        <p className="text-muted">
+          English &amp; Swahili by root, <span className="text-fg">German by design.</span>
+        </p>
+      </div>
       <TransitionLink
         href="/about"
         className="rounded-full border border-faint px-6 py-3 text-[11px] uppercase tracking-[0.3em]"
