@@ -178,19 +178,28 @@ function PanelContent({ panel }: { panel: Panel }) {
 /* Shared panel geometry — every frame, filled or empty, lands on the same
    spot so the portrait stays anchored while the text swaps beneath it. */
 const FRAME_BOX = "h-28 w-24 md:h-36 md:w-[7.5rem]";
-const TEXT_WELL = "mt-7 min-h-[11rem] md:mt-9 md:min-h-[14rem]";
+const TEXT_WELL = "mt-7 min-h-[9.5rem] md:mt-8 md:min-h-[12rem]";
 
-/* Breather panels: the frame with nothing in it — only corner tick marks. */
+/* Breather panels: the frame, visibly present but holding nothing —
+   same bezel and inner surface as the labelled panels, no photo, plus
+   corner tick marks so it reads as a deliberate empty frame. */
 function EmptyFrame() {
-  const tick = "absolute h-4 w-4 border-accent/55 md:h-5 md:w-5";
+  const tick = "absolute h-5 w-5 border-accent/80 md:h-6 md:w-6";
   return (
     <div className="flex flex-col items-center">
-      <div className="w-fit p-1.5">
-        <div className={`relative ${FRAME_BOX}`} aria-hidden>
-          <span className={`${tick} left-0 top-0 border-l border-t`} />
-          <span className={`${tick} right-0 top-0 border-r border-t`} />
-          <span className={`${tick} bottom-0 left-0 border-b border-l`} />
-          <span className={`${tick} bottom-0 right-0 border-b border-r`} />
+      <div className="w-fit rounded-xl border border-faint bg-fg/5 p-1.5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]">
+        <div
+          className={`relative ${FRAME_BOX} rounded-[calc(0.75rem-0.25rem)] border border-fg/15`}
+          style={{
+            background:
+              "radial-gradient(120% 90% at 30% 20%, var(--faint) 0%, transparent 65%)",
+          }}
+          aria-hidden
+        >
+          <span className={`${tick} -left-px -top-px border-l border-t`} />
+          <span className={`${tick} -right-px -top-px border-r border-t`} />
+          <span className={`${tick} -bottom-px -left-px border-b border-l`} />
+          <span className={`${tick} -bottom-px -right-px border-b border-r`} />
         </div>
       </div>
       {/* holds the frame at the same height as the labelled panels */}
@@ -246,12 +255,12 @@ function QuoteCard({ text, label }: { text: string; label: string }) {
     <div className="flex flex-col items-center">
       <PortraitFrame />
       <div className={`flex flex-col items-center ${TEXT_WELL}`}>
-        <h2 className="font-display text-[clamp(1.6rem,4.2vw,3.4rem)] font-light uppercase leading-[1.1] tracking-[0.16em] [text-indent:0.16em] [text-wrap:balance]">
+        <h2 className="font-display text-[clamp(1.05rem,1.75vw,1.5rem)] font-normal uppercase leading-[1.3] tracking-[0.22em] [text-indent:0.22em] [text-wrap:balance]">
           {label}
         </h2>
         {/* hairline rule separating the role from the quote */}
-        <span aria-hidden className="mt-5 block h-px w-10 bg-accent" />
-        <p className="breathe mt-7 max-w-[42ch] text-[clamp(0.95rem,1.5vw,1.2rem)] leading-[1.6] text-muted [text-wrap:balance] md:mt-9">
+        <span aria-hidden className="mt-4 block h-px w-10 bg-accent" />
+        <p className="breathe mt-6 max-w-[38ch] text-[clamp(0.9rem,1.25vw,1.05rem)] leading-[1.65] text-muted [text-wrap:balance] md:mt-7">
           {text}
         </p>
       </div>
