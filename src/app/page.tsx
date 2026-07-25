@@ -171,11 +171,36 @@ function PanelContent({ panel }: { panel: Panel }) {
       </div>
     );
   }
-  if (panel.kind === "breather") return <PortraitFrame />;
+  if (panel.kind === "breather") return <EmptyFrame />;
   return <QuoteCard text={panel.text} label={panel.label} />;
 }
 
-/* The small framed portrait shared by every panel.
+/* Shared panel geometry — every frame, filled or empty, lands on the same
+   spot so the portrait stays anchored while the text swaps beneath it. */
+const FRAME_BOX = "h-28 w-24 md:h-36 md:w-[7.5rem]";
+const TEXT_WELL = "mt-7 min-h-[11rem] md:mt-9 md:min-h-[14rem]";
+
+/* Breather panels: the frame with nothing in it — only corner tick marks. */
+function EmptyFrame() {
+  const tick = "absolute h-4 w-4 border-accent/55 md:h-5 md:w-5";
+  return (
+    <div className="flex flex-col items-center">
+      <div className="w-fit p-1.5">
+        <div className={`relative ${FRAME_BOX}`} aria-hidden>
+          <span className={`${tick} left-0 top-0 border-l border-t`} />
+          <span className={`${tick} right-0 top-0 border-r border-t`} />
+          <span className={`${tick} bottom-0 left-0 border-b border-l`} />
+          <span className={`${tick} bottom-0 right-0 border-b border-r`} />
+        </div>
+      </div>
+      {/* holds the frame at the same height as the labelled panels */}
+      <div className={TEXT_WELL} aria-hidden />
+    </div>
+  );
+}
+
+/* The SAME portrait in all five labelled panels — the repetition is the
+   point, so there is deliberately no per-panel image.
    Drop the real photo at public/portrait-front.jpg → served at /portrait-front.jpg.
    Until then a quiet neutral fill stands in (no broken-image alt text). */
 function PortraitFrame() {
@@ -192,7 +217,7 @@ function PortraitFrame() {
   return (
     <div className="mx-auto w-fit rounded-xl border border-faint bg-fg/5 p-1.5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]">
       <div
-        className="relative h-28 w-24 overflow-hidden rounded-[calc(0.75rem-0.25rem)] border border-fg/15 md:h-36 md:w-[7.5rem]"
+        className={`relative ${FRAME_BOX} overflow-hidden rounded-[calc(0.75rem-0.25rem)] border border-fg/15`}
         style={
           missing
             ? { background: "radial-gradient(120% 90% at 30% 20%, var(--faint) 0%, transparent 65%)" }
@@ -218,18 +243,18 @@ function PortraitFrame() {
    with a gold hairline beneath it — then the quote in smaller breathing type. */
 function QuoteCard({ text, label }: { text: string; label: string }) {
   return (
-    <div className="flex flex-col items-center gap-7 md:gap-9">
+    <div className="flex flex-col items-center">
       <PortraitFrame />
-      <div className="flex flex-col items-center gap-5">
+      <div className={`flex flex-col items-center ${TEXT_WELL}`}>
         <h2 className="font-display text-[clamp(1.6rem,4.2vw,3.4rem)] font-light uppercase leading-[1.1] tracking-[0.16em] [text-indent:0.16em] [text-wrap:balance]">
           {label}
         </h2>
         {/* hairline rule separating the role from the quote */}
-        <span aria-hidden className="block h-px w-10 bg-accent" />
+        <span aria-hidden className="mt-5 block h-px w-10 bg-accent" />
+        <p className="breathe mt-7 max-w-[42ch] text-[clamp(0.95rem,1.5vw,1.2rem)] leading-[1.6] text-muted [text-wrap:balance] md:mt-9">
+          {text}
+        </p>
       </div>
-      <p className="breathe max-w-[42ch] text-[clamp(0.95rem,1.5vw,1.2rem)] leading-[1.6] text-muted [text-wrap:balance]">
-        {text}
-      </p>
     </div>
   );
 }
