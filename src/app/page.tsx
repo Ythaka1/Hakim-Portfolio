@@ -22,12 +22,27 @@ import { HERO_QUOTES } from "@/lib/data";
 
 type Panel =
   | { kind: "signature" }
-  | { kind: "quote"; text: string; label: string | null }
+  | { kind: "quote"; text: string; label: string }
+  | { kind: "breather" }
   | { kind: "outro" };
 
+const [q1, q2, q3, q4, q5] = HERO_QUOTES.map((q) => ({
+  kind: "quote" as const,
+  text: q.text,
+  label: q.label,
+}));
+
+/* Two frame-only breathers sit between the labelled panels so the row
+   isn't five statements back-to-back. */
 const PANELS: Panel[] = [
   { kind: "signature" },
-  ...HERO_QUOTES.map((q) => ({ kind: "quote" as const, text: q.text, label: q.label })),
+  q1,
+  q2,
+  { kind: "breather" },
+  q3,
+  q4,
+  { kind: "breather" },
+  q5,
   { kind: "outro" },
 ];
 
@@ -156,31 +171,36 @@ function PanelContent({ panel }: { panel: Panel }) {
       </div>
     );
   }
+  if (panel.kind === "breather") return <PortraitFrame />;
   return <QuoteCard text={panel.text} label={panel.label} />;
 }
 
-/* Framed-portrait quote layout: small framed portrait on top, the quote
-   centered below, a bracketed role label beneath (or none). */
-function QuoteCard({ text, label }: { text: string; label: string | null }) {
+/* quote-portrait.jpg — the small framed portrait shared by every panel. */
+function PortraitFrame() {
+  return (
+    <div className="mx-auto w-fit rounded-xl border border-faint bg-fg/5 p-1.5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]">
+      <PairedImage
+        {...ASSETS.quotePortrait}
+        className="h-28 w-24 md:h-36 md:w-[7.5rem] rounded-[calc(0.75rem-0.25rem)]"
+      />
+    </div>
+  );
+}
+
+/* Portrait frame on top, the ROLE as the display headline in gold
+   brackets, the quote beneath it in smaller breathing type. */
+function QuoteCard({ text, label }: { text: string; label: string }) {
   return (
     <div className="flex flex-col items-center gap-7 md:gap-9">
-      {/* quote-portrait.jpg — small framed portrait */}
-      <div className="rounded-xl border border-faint bg-fg/5 p-1.5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]">
-        <PairedImage
-          {...ASSETS.quotePortrait}
-          className="h-28 w-24 md:h-36 md:w-30 rounded-[calc(0.75rem-0.25rem)]"
-        />
-      </div>
-      <p className="font-display text-[clamp(1.35rem,2.9vw,2.4rem)] leading-[1.25] [text-wrap:balance]">
+      <PortraitFrame />
+      <h2 className="font-display text-[clamp(1.7rem,4.4vw,3.6rem)] uppercase leading-[1.1] tracking-[0.04em] [text-wrap:balance]">
+        <span className="text-accent">[</span>
+        <span className="mx-3 md:mx-5">{label}</span>
+        <span className="text-accent">]</span>
+      </h2>
+      <p className="breathe max-w-[42ch] text-[clamp(0.95rem,1.5vw,1.2rem)] leading-[1.6] text-muted [text-wrap:balance]">
         {text}
       </p>
-      {label && (
-        <p className="text-[11px] uppercase tracking-[0.3em] text-muted">
-          <span className="text-accent">[</span>
-          <span className="mx-3">{label}</span>
-          <span className="text-accent">]</span>
-        </p>
-      )}
     </div>
   );
 }
@@ -206,7 +226,7 @@ function HeroStatic() {
         Hakimmy
       </h1>
       {HERO_QUOTES.map((q) => (
-        <div key={q.text} className="max-w-[46ch]">
+        <div key={q.label} className="max-w-[46ch]">
           <QuoteCard text={q.text} label={q.label} />
         </div>
       ))}

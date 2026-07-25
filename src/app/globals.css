@@ -14,6 +14,9 @@
   --accent: #c2a25f;
   --wipe: #0c0b09;
   --grain-opacity: 0.045;
+  --glow-off: rgba(194, 162, 95, 0);
+  --glow-near: rgba(194, 162, 95, 0.38);
+  --glow-far: rgba(194, 162, 95, 0.16);
 }
 
 html[data-theme="light"] {
@@ -23,6 +26,9 @@ html[data-theme="light"] {
   --faint: rgba(23, 20, 15, 0.12);
   --accent: #9d7c35;
   --grain-opacity: 0.06;
+  --glow-off: rgba(157, 124, 53, 0);
+  --glow-near: rgba(157, 124, 53, 0.3);
+  --glow-far: rgba(157, 124, 53, 0.12);
 }
 
 @theme inline {
@@ -117,6 +123,24 @@ html {
   font-weight: 500;
 }
 
+/* ---------- breathing glow (hero quote text only) ---------- */
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.62;
+    text-shadow: 0 0 0 var(--glow-off);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 16px var(--glow-near), 0 0 40px var(--glow-far);
+  }
+}
+
+.breathe {
+  animation: breathe 5s ease-in-out infinite;
+  will-change: opacity;
+}
+
 /* Ghost nav word behind the layout */
 .ghost-word {
   position: fixed;
@@ -138,6 +162,11 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .grain-overlay {
     animation: none;
+  }
+  .breathe {
+    animation: none;
+    opacity: 1;
+    text-shadow: none;
   }
   html {
     scroll-behavior: auto;

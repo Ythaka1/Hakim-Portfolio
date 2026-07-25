@@ -1,19 +1,19 @@
 /* Central content — edit copy here, not inside components. */
 
-/* Hero quote panels — framed portrait on top, quote, bracketed role label.
-   label: null renders frame + quote only. */
+/* Hero quote panels — framed portrait on top, the role as the display
+   headline, the quote below it in smaller type. */
 export const HERO_QUOTES = [
   {
-    text: "The oak tree grows slower than the weed, but it survives every storm.",
     label: "Software Developer",
+    text: "The oak tree grows slower than the weed, but it survives every storm.",
   },
   {
-    text: "If they put a cross on your back, carry it — and silently carry it to the top.",
     label: "AI Developer",
+    text: "If they put a cross on your back, carry it — and silently carry it to the top.",
   },
-  { text: "It's you vs you.", label: "Designer" },
-  { text: "Not every closed door is locked. Push.", label: "Open for Collaborations" },
-  { text: "Carpe diem.", label: null },
+  { label: "Designer", text: "It's you vs you." },
+  { label: "Open for Collaborations", text: "Not every closed door is locked. Push." },
+  { label: "Founder", text: "Carpe diem." },
 ] as const;
 
 export const MANTRAS = HERO_QUOTES.map((q) => q.text);

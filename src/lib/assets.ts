@@ -22,18 +22,13 @@ export const ASSETS = {
     alt: "",
   },
 
-  /* about-portrait-suit.jpg — huge portrait, revealed on scroll. */
-  aboutPortrait: {
-    dark: "/images/about-portrait-suit.jpg",
-    light: "/images/about-portrait-suit-light.jpg",
+  /* portrait-profile.jpg — ONE graded profile portrait. Both about-page
+     profiles come from this single file; the opposite-facing version is
+     the same image CSS-mirrored with scaleX(-1), never a second download. */
+  portraitProfile: {
+    dark: "/images/portrait-profile.jpg",
+    light: "/images/portrait-profile-light.jpg",
     alt: "Portrait of Hakim",
-  },
-
-  /* about-sitting.jpg — second about image. */
-  aboutSitting: {
-    dark: "/images/about-sitting.jpg",
-    light: "/images/about-sitting-light.jpg",
-    alt: "Hakim, seated",
   },
 
   /* quote-portrait.jpg — small framed portrait above each hero quote. */

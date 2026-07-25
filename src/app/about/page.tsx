@@ -77,7 +77,7 @@ function Opener() {
   );
 }
 
-/* ---------- huge portrait: about-portrait-suit.jpg ---------- */
+/* ---------- huge portrait: portrait-profile.jpg ---------- */
 function Portrait() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -95,7 +95,7 @@ function Portrait() {
             style={{ scale, y }}
             className="relative aspect-[3/4] md:aspect-[4/5] overflow-hidden rounded-[calc(2rem-0.375rem)]"
           >
-            <PairedImage {...ASSETS.aboutPortrait} className="absolute inset-0" />
+            <PairedImage {...ASSETS.portraitProfile} className="absolute inset-0" />
           </motion.div>
         </div>
       </Rise>
@@ -166,14 +166,19 @@ function Story() {
   );
 }
 
-/* ---------- second image: about-sitting.jpg ---------- */
+/* ---------- second profile: the SAME portrait-profile.jpg, CSS-mirrored
+   so it faces the other way. One file, one download, two directions. ---------- */
 function SecondImage() {
   return (
     <section className="mx-auto max-w-4xl px-6 py-12 md:py-24">
       <Rise>
         <div className="overflow-hidden rounded-[2rem] border border-faint p-1.5 bg-fg/5">
           <div className="relative aspect-[16/10] overflow-hidden rounded-[calc(2rem-0.375rem)]">
-            <PairedImage {...ASSETS.aboutSitting} className="absolute inset-0" />
+            <PairedImage
+              {...ASSETS.portraitProfile}
+              alt=""
+              className="absolute inset-0 [transform:scaleX(-1)]"
+            />
           </div>
         </div>
       </Rise>
