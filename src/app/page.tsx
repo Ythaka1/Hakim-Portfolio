@@ -7,7 +7,7 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import PairedImage from "@/components/PairedImage";
 import { TransitionLink } from "@/components/transition";
 import { ASSETS } from "@/lib/assets";
@@ -175,29 +175,58 @@ function PanelContent({ panel }: { panel: Panel }) {
   return <QuoteCard text={panel.text} label={panel.label} />;
 }
 
-/* quote-portrait.jpg — the small framed portrait shared by every panel. */
+/* The small framed portrait shared by every panel.
+   Drop the real photo at public/portrait-front.jpg → served at /portrait-front.jpg.
+   Until then a quiet neutral fill stands in (no broken-image alt text). */
 function PortraitFrame() {
+  const [missing, setMissing] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // The <img> starts loading while the HTML parses, so a failure can land
+  // before React attaches onError. Re-check the real state after mount.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth === 0) setMissing(true);
+  }, []);
+
   return (
     <div className="mx-auto w-fit rounded-xl border border-faint bg-fg/5 p-1.5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]">
-      <PairedImage
-        {...ASSETS.quotePortrait}
-        className="h-28 w-24 md:h-36 md:w-[7.5rem] rounded-[calc(0.75rem-0.25rem)]"
-      />
+      <div
+        className="relative h-28 w-24 overflow-hidden rounded-[calc(0.75rem-0.25rem)] border border-fg/15 md:h-36 md:w-[7.5rem]"
+        style={
+          missing
+            ? { background: "radial-gradient(120% 90% at 30% 20%, var(--faint) 0%, transparent 65%)" }
+            : undefined
+        }
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          ref={imgRef}
+          src="/portrait-front.jpg"
+          alt={missing ? "" : "Hakim"}
+          onError={() => setMissing(true)}
+          className={`h-full w-full object-cover transition-opacity duration-500 ${
+            missing ? "hidden" : "opacity-100"
+          }`}
+        />
+      </div>
     </div>
   );
 }
 
-/* Portrait frame on top, the ROLE as the display headline in gold
-   brackets, the quote beneath it in smaller breathing type. */
+/* Portrait frame on top, the ROLE as the display headline — spaced serif
+   with a gold hairline beneath it — then the quote in smaller breathing type. */
 function QuoteCard({ text, label }: { text: string; label: string }) {
   return (
     <div className="flex flex-col items-center gap-7 md:gap-9">
       <PortraitFrame />
-      <h2 className="font-display text-[clamp(1.7rem,4.4vw,3.6rem)] uppercase leading-[1.1] tracking-[0.04em] [text-wrap:balance]">
-        <span className="text-accent">[</span>
-        <span className="mx-3 md:mx-5">{label}</span>
-        <span className="text-accent">]</span>
-      </h2>
+      <div className="flex flex-col items-center gap-5">
+        <h2 className="font-display text-[clamp(1.6rem,4.2vw,3.4rem)] font-light uppercase leading-[1.1] tracking-[0.16em] [text-indent:0.16em] [text-wrap:balance]">
+          {label}
+        </h2>
+        {/* hairline rule separating the role from the quote */}
+        <span aria-hidden className="block h-px w-10 bg-accent" />
+      </div>
       <p className="breathe max-w-[42ch] text-[clamp(0.95rem,1.5vw,1.2rem)] leading-[1.6] text-muted [text-wrap:balance]">
         {text}
       </p>

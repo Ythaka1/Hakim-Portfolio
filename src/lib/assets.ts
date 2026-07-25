@@ -30,11 +30,7 @@ export const ASSETS = {
     light: "/images/portrait-profile-light.jpg",
     alt: "Portrait of Hakim",
   },
-
-  /* quote-portrait.jpg — small framed portrait above each hero quote. */
-  quotePortrait: {
-    dark: "/images/quote-portrait.jpg",
-    light: "/images/quote-portrait-light.jpg",
-    alt: "Portrait",
-  },
 } satisfies Record<string, PairedAsset>;
+
+/* The hero panel frames use a single plain image, not a paired swap:
+   public/portrait-front.jpg → served at /portrait-front.jpg */
