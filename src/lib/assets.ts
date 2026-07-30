@@ -33,4 +33,4 @@ export const ASSETS = {
 } satisfies Record<string, PairedAsset>;
 
 /* The hero panel frames use a single plain image, not a paired swap:
-   public/portrait-front.jpg → served at /portrait-front.jpg */
+   public/images/portrait-front.png → served at /images/portrait-front.png */

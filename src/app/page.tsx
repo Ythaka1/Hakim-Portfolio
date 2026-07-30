@@ -174,8 +174,8 @@ const TEXT_WELL = "mt-7 min-h-[9.5rem] md:mt-8 md:min-h-[12rem]";
 
 /* The SAME portrait in all five labelled panels — the repetition is the
    point, so there is deliberately no per-panel image.
-   Drop the real photo at public/portrait-front.jpg → served at /portrait-front.jpg.
-   Until then a quiet neutral fill stands in (no broken-image alt text). */
+   Photo lives at public/images/portrait-front.png → /images/portrait-front.png.
+   If it is ever missing, a quiet neutral fill stands in (no alt text). */
 function PortraitFrame() {
   const [missing, setMissing] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -200,7 +200,7 @@ function PortraitFrame() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
-          src="/portrait-front.jpg"
+          src="/images/portrait-front.png"
           alt={missing ? "" : "Hakim"}
           onError={() => setMissing(true)}
           className={`h-full w-full object-cover transition-opacity duration-500 ${
