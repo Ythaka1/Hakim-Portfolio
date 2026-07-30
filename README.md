@@ -16,7 +16,7 @@ Dark, cinematic, and quiet-luxury: signature-script identity, paired dark/light 
 | Route | What happens |
 | --- | --- |
 | `/` | Full-viewport hero; vertical scroll hijacked into horizontal panels — signature, five mantras, intro + cue |
-| `/about` | Opener, huge portrait reveal, "Shaped by …" one-line-at-a-time, the story with a self-drawing `hm` monogram, process words revealed word-by-word on scroll, mum appreciation, closing mantra marquee |
+| `/about` | Opener, huge portrait reveal, "Shaped by …" one-line-at-a-time, the story with a self-drawing `hwc` monogram, process words revealed word-by-word on scroll, mum appreciation, closing mantra marquee |
 | `/works` | 3D cylinder card carousel — continuous circular scroll, inertia damping, mouse-parallax tilt, volumetric card thickness, perspective 1350px, pure black stage |
 | `/contact` | Full-viewport magnetic email + social links (`#` placeholders) |
 

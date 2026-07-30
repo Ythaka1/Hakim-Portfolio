@@ -96,7 +96,7 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
             }}
             aria-hidden
           >
-            <span className="font-signature text-4xl text-[#ece6da]/70 -rotate-3">hm</span>
+            <span className="font-signature text-4xl text-[#ece6da]/70 -rotate-3">hwc</span>
           </motion.div>
         )}
       </AnimatePresence>

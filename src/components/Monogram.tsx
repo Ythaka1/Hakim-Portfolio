@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "motion/react";
 
 /*
- * The "hm" monogram, drawn as SVG strokes so it can sketch itself in as
+ * The "hwc" monogram, drawn as SVG strokes so it can sketch itself in as
  * the story section enters view. Replace with the real logo SVG later —
  * keep the <motion.path> structure so the draw-on animation survives.
  */
@@ -36,17 +36,27 @@ export default function Monogram({ className = "" }: { className?: string }) {
       <motion.path
         custom={0}
         variants={draw}
-        d="M42 22 C40 60 37 100 36 140 M36 104 C44 90 66 82 74 94 C80 103 77 126 75 140"
+        d="M32 22 C30 60 27 100 26 140 M26 104 C34 90 56 82 64 94 C70 103 67 126 65 140"
         stroke="currentColor"
         strokeWidth="4"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* m */}
+      {/* w */}
       <motion.path
         custom={1}
         variants={draw}
-        d="M104 96 C104 110 102 126 101 140 M102 112 C108 100 124 92 131 100 C136 106 134 126 133 140 M133 112 C139 100 155 92 162 100 C167 106 165 126 164 140"
+        d="M84 96 C88 116 92 130 97 140 C102 128 106 114 110 104 C114 118 119 132 123 140 C128 126 132 110 136 96"
+        stroke="currentColor"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* c */}
+      <motion.path
+        custom={2}
+        variants={draw}
+        d="M196 108 C190 98 176 93 167 100 C157 108 155 127 164 135 C173 142 188 138 196 130"
         stroke="currentColor"
         strokeWidth="4"
         strokeLinecap="round"
@@ -54,9 +64,9 @@ export default function Monogram({ className = "" }: { className?: string }) {
       />
       {/* underline flick */}
       <motion.path
-        custom={2}
+        custom={3}
         variants={draw}
-        d="M30 156 C80 148 150 148 190 152"
+        d="M24 156 C80 148 152 148 200 152"
         stroke="var(--accent)"
         strokeWidth="2.5"
         strokeLinecap="round"

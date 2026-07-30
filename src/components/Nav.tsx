@@ -10,7 +10,7 @@ import { TransitionLink } from "./transition";
 
 /*
  * Navigation:
- *  - "hm" monogram top-left; hovering it reveals the word "home".
+ *  - "hwc" monogram top-left; hovering it reveals the word "home".
  *  - "works" / "contact" explode into a huge ghosted word behind the layout
  *    on hover (Kalinsky-style typographic hover).
  *  - Theme toggle far right (plays the chime via ThemeProvider).
@@ -60,7 +60,7 @@ export default function Nav() {
           onLeave={() => setHomeHover(false)}
         >
           <span className="font-signature text-3xl leading-none -rotate-3 inline-block">
-            hm
+            hwc
           </span>
           <AnimatePresence>
             {homeHover && (

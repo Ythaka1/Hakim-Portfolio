@@ -23,26 +23,16 @@ import { HERO_QUOTES } from "@/lib/data";
 type Panel =
   | { kind: "signature" }
   | { kind: "quote"; text: string; label: string }
-  | { kind: "breather" }
   | { kind: "outro" };
 
-const [q1, q2, q3, q4, q5] = HERO_QUOTES.map((q) => ({
-  kind: "quote" as const,
-  text: q.text,
-  label: q.label,
-}));
-
-/* Two frame-only breathers sit between the labelled panels so the row
-   isn't five statements back-to-back. */
+/* Signature, then the five labelled roles back-to-back, then the intro. */
 const PANELS: Panel[] = [
   { kind: "signature" },
-  q1,
-  q2,
-  { kind: "breather" },
-  q3,
-  q4,
-  { kind: "breather" },
-  q5,
+  ...HERO_QUOTES.map((q) => ({
+    kind: "quote" as const,
+    text: q.text,
+    label: q.label,
+  })),
   { kind: "outro" },
 ];
 
@@ -171,42 +161,13 @@ function PanelContent({ panel }: { panel: Panel }) {
       </div>
     );
   }
-  if (panel.kind === "breather") return <EmptyFrame />;
   return <QuoteCard text={panel.text} label={panel.label} />;
 }
 
-/* Shared panel geometry — every frame, filled or empty, lands on the same
-   spot so the portrait stays anchored while the text swaps beneath it. */
+/* Shared panel geometry — a fixed text well below each frame keeps the
+   portrait anchored while the role and quote swap beneath it. */
 const FRAME_BOX = "h-28 w-24 md:h-36 md:w-[7.5rem]";
 const TEXT_WELL = "mt-7 min-h-[9.5rem] md:mt-8 md:min-h-[12rem]";
-
-/* Breather panels: the frame, visibly present but holding nothing —
-   same bezel and inner surface as the labelled panels, no photo, plus
-   corner tick marks so it reads as a deliberate empty frame. */
-function EmptyFrame() {
-  const tick = "absolute h-5 w-5 border-accent/80 md:h-6 md:w-6";
-  return (
-    <div className="flex flex-col items-center">
-      <div className="w-fit rounded-xl border border-faint bg-fg/5 p-1.5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]">
-        <div
-          className={`relative ${FRAME_BOX} rounded-[calc(0.75rem-0.25rem)] border border-fg/15`}
-          style={{
-            background:
-              "radial-gradient(120% 90% at 30% 20%, var(--faint) 0%, transparent 65%)",
-          }}
-          aria-hidden
-        >
-          <span className={`${tick} -left-px -top-px border-l border-t`} />
-          <span className={`${tick} -right-px -top-px border-r border-t`} />
-          <span className={`${tick} -bottom-px -left-px border-b border-l`} />
-          <span className={`${tick} -bottom-px -right-px border-b border-r`} />
-        </div>
-      </div>
-      {/* holds the frame at the same height as the labelled panels */}
-      <div className={TEXT_WELL} aria-hidden />
-    </div>
-  );
-}
 
 /* The SAME portrait in all five labelled panels — the repetition is the
    point, so there is deliberately no per-panel image.
