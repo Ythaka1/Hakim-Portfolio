@@ -7,7 +7,7 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Monogram from "@/components/Monogram";
 import PairedImage from "@/components/PairedImage";
 import { ASSETS } from "@/lib/assets";
@@ -58,7 +58,7 @@ function Opener() {
   return (
     <section className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 px-6 text-center">
       <motion.h1
-        className="font-display text-[clamp(2.4rem,7vw,6rem)] font-light italic leading-[1.1] pb-2"
+        className="font-display text-[clamp(1.9rem,7vw,6rem)] font-light italic leading-[1.15] pb-2 [text-wrap:balance]"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.1, ease: EASE, delay: 0.15 }}
@@ -139,7 +139,7 @@ function ShapedLine({
   return (
     <motion.p
       style={{ opacity, y }}
-      className="font-display text-[clamp(2.2rem,7.5vw,6.5rem)] leading-[1.05]"
+      className="font-display text-[clamp(1.5rem,7vw,6.5rem)] leading-[1.1] [text-wrap:balance]"
     >
       Shaped by <em className="italic text-accent">{word}</em>
     </motion.p>
@@ -232,7 +232,7 @@ function ProcessWord({
     <span className="flex items-baseline gap-x-5 md:gap-x-8">
       <motion.span
         style={{ opacity }}
-        className="font-display text-[clamp(1.9rem,5.5vw,4.6rem)] leading-[1.15]"
+        className="font-display text-[clamp(1.35rem,5.2vw,4.6rem)] leading-[1.2]"
       >
         {word}
       </motion.span>
@@ -256,9 +256,43 @@ function Mother() {
   );
 }
 
-/* ---------- closing loop: mantras drift by, back toward the hero ---------- */
+/* ---------- closing loop: the mantras, back toward the hero ----------
+   Desktop drifts them past horizontally; small screens stack them
+   vertically instead, since a marquee of long sentences is unreadable
+   on a phone. */
 function MantraMarquee() {
   const reduced = useReducedMotion();
+  const [stacked, setStacked] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const sync = () => setStacked(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  if (stacked) {
+    return (
+      <section className="border-t border-faint px-6 py-14">
+        <ul className="mx-auto flex max-w-lg flex-col gap-7">
+          {MANTRAS.map((m) => (
+            <li key={m}>
+              <Rise>
+                <p className="font-display text-lg font-light leading-snug text-muted [text-wrap:balance]">
+                  {m}
+                </p>
+                <span aria-hidden className="mt-3 block text-sm text-accent/70">
+                  ✦
+                </span>
+              </Rise>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  }
+
   const row = (
     <div className="flex shrink-0 items-center gap-16 pr-16">
       {MANTRAS.map((m) => (

@@ -47,11 +47,11 @@ export default function Nav() {
         )}
       </AnimatePresence>
 
-      <header className="fixed inset-x-0 top-0 z-[70] flex items-center justify-between px-6 py-5 md:px-10">
+      <header className="fixed inset-x-0 top-0 z-[70] flex items-center justify-between px-4 py-3 md:px-10 md:py-5">
         {/* Monogram → home. Swap for a logo SVG later if you like. */}
         <TransitionLink
           href="/"
-          className="relative flex h-10 items-center"
+          className="relative flex min-h-[44px] items-center"
           aria-label="Home"
           onHover={() => {
             setHomeHover(true);
@@ -77,12 +77,12 @@ export default function Nav() {
           </AnimatePresence>
         </TransitionLink>
 
-        <nav className="flex items-center gap-7 md:gap-10" aria-label="Main">
+        <nav className="flex items-center gap-3 sm:gap-5 md:gap-8" aria-label="Main">
           {ITEMS.map((item) => (
             <TransitionLink
               key={item.href}
               href={item.href}
-              className={`relative text-[12px] uppercase tracking-[0.3em] transition-colors duration-300 ${
+              className={`relative flex min-h-[44px] items-center text-[11px] uppercase tracking-[0.25em] transition-colors duration-300 md:text-[12px] md:tracking-[0.3em] ${
                 pathname === item.href ? "text-accent" : "text-fg hover:text-accent"
               }`}
               onHover={() => {
@@ -102,14 +102,11 @@ export default function Nav() {
             onClick={toggle}
             onMouseEnter={tick}
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-            className="relative flex h-8 w-8 items-center justify-center rounded-full border border-faint"
+            className="relative flex h-11 w-11 items-center justify-center rounded-full border border-faint"
           >
             <motion.span
-              className="block h-2.5 w-2.5 rounded-full"
-              animate={{
-                backgroundColor: theme === "dark" ? "#ece6da" : "#17140f",
-                scale: theme === "dark" ? 1 : 0.7,
-              }}
+              className="block h-2.5 w-2.5 rounded-full bg-fg"
+              animate={{ scale: theme === "dark" ? 1 : 0.65 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
             />
           </button>
@@ -132,7 +129,7 @@ function MuteToggle() {
       onMouseEnter={tick}
       aria-label={muted ? "Unmute background music" : "Mute background music"}
       aria-pressed={!muted}
-      className="relative flex h-8 w-8 items-end justify-center gap-[3px] rounded-full border border-faint pb-[9px]"
+      className="relative flex h-11 w-11 items-end justify-center gap-[3px] rounded-full border border-faint pb-[15px]"
     >
       {[0, 1, 2].map((i) => (
         <motion.span

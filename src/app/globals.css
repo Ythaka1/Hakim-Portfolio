@@ -13,10 +13,21 @@
   --faint: rgba(236, 230, 218, 0.12);
   --accent: #c2a25f;
   --wipe: #0c0b09;
+  --wipe-fg: rgba(236, 230, 218, 0.7);
   --grain-opacity: 0.045;
   --glow-off: rgba(194, 162, 95, 0);
   --glow-near: rgba(194, 162, 95, 0.38);
   --glow-far: rgba(194, 162, 95, 0.16);
+
+  /* Project cards are physical objects: they stay dark in both themes.
+     Only their edge treatment changes so they read against the page. */
+  --card-bg: #0f0f0f;
+  --card-rim: #3a3a3a;
+  --card-border: rgba(255, 255, 255, 0.15);
+  --card-hairline: rgba(255, 255, 255, 0.1);
+  --card-fg: rgba(255, 255, 255, 0.9);
+  --card-fg-dim: rgba(255, 255, 255, 0.45);
+  --card-shadow: 0 30px 60px -35px rgba(0, 0, 0, 0.9);
 }
 
 html[data-theme="light"] {
@@ -26,9 +37,21 @@ html[data-theme="light"] {
   --faint: rgba(23, 20, 15, 0.12);
   --accent: #9d7c35;
   --grain-opacity: 0.06;
+  --wipe: #17140f;
+  --wipe-fg: rgba(244, 239, 230, 0.75);
   --glow-off: rgba(157, 124, 53, 0);
   --glow-near: rgba(157, 124, 53, 0.3);
   --glow-far: rgba(157, 124, 53, 0.12);
+
+  /* Light mode: same dark cards, stronger edge + a real drop shadow so
+     they sit on the warm page instead of floating. */
+  --card-bg: #131211;
+  --card-rim: #4a4744;
+  --card-border: rgba(23, 20, 15, 0.45);
+  --card-hairline: rgba(255, 255, 255, 0.14);
+  --card-fg: rgba(240, 236, 228, 0.92);
+  --card-fg-dim: rgba(240, 236, 228, 0.5);
+  --card-shadow: 0 26px 50px -22px rgba(23, 20, 15, 0.45), 0 6px 14px -8px rgba(23, 20, 15, 0.3);
 }
 
 @theme inline {

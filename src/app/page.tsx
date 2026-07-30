@@ -117,8 +117,11 @@ function HeroPanel({
   const shift = useTransform(progress, [lo, hi], [60, -60]);
 
   return (
-    <div className="flex h-full w-screen shrink-0 items-center justify-center px-8">
-      <motion.div style={{ opacity, x: shift }} className="max-w-[46ch] text-center">
+    <div className="flex h-full w-screen shrink-0 items-center justify-center px-5 sm:px-8">
+      <motion.div
+        style={{ opacity, x: shift }}
+        className="w-full max-w-[46ch] text-center"
+      >
         {children}
       </motion.div>
     </div>
@@ -151,7 +154,7 @@ function PanelContent({ panel }: { panel: Panel }) {
         </div>
         <TransitionLink
           href="/about"
-          className="group flex items-center gap-4 rounded-full border border-faint py-3 pl-6 pr-2 text-[11px] uppercase tracking-[0.3em] transition-colors duration-500 hover:border-accent"
+          className="group flex min-h-[44px] items-center gap-4 rounded-full border border-faint py-3 pl-6 pr-2 text-[11px] uppercase tracking-[0.3em] transition-colors duration-500 hover:border-accent"
         >
           step inside
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-fg/10 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5">

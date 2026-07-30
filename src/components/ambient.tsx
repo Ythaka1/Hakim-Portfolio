@@ -71,9 +71,29 @@ export function AmbientProvider({ children }: { children: React.ReactNode }) {
     window.addEventListener("pointerdown", arm, { passive: true });
     window.addEventListener("keydown", arm);
 
+    /* Leaving the tab silences the music; coming back resumes it from
+       where it stopped — but only if it was actually playing and the
+       visitor hasn't muted it. */
+    let wasPlaying = false;
+    const onVisibility = () => {
+      const a = audioRef.current;
+      if (!a) return;
+      if (document.hidden) {
+        wasPlaying = !a.paused;
+        if (wasPlaying) {
+          if (fadeRef.current) window.clearInterval(fadeRef.current);
+          a.pause();
+        }
+      } else if (wasPlaying && !mutedRef.current) {
+        a.play().then(() => fadeIn(a)).catch(() => {});
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
     return () => {
       window.removeEventListener("pointerdown", arm);
       window.removeEventListener("keydown", arm);
+      document.removeEventListener("visibilitychange", onVisibility);
       if (fadeRef.current) window.clearInterval(fadeRef.current);
       audio.pause();
       audio.src = "";

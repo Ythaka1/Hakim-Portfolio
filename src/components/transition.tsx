@@ -87,7 +87,8 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
         {covering && (
           <motion.div
             key="wipe"
-            className="fixed inset-0 z-[90] flex items-center justify-center bg-[#0c0b09]"
+            className="fixed inset-0 z-[90] flex items-center justify-center"
+            style={{ backgroundColor: "var(--wipe)" }}
             initial={{ y: "100%" }}
             animate={{ y: "0%", transition: { duration: 0.5, ease: EASE } }}
             exit={{ y: "-100%", transition: { duration: 0.55, ease: EASE } }}
@@ -96,7 +97,12 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
             }}
             aria-hidden
           >
-            <span className="font-signature text-4xl text-[#ece6da]/70 -rotate-3">hwc</span>
+            <span
+              className="font-signature text-4xl -rotate-3"
+              style={{ color: "var(--wipe-fg)" }}
+            >
+              hwc
+            </span>
           </motion.div>
         )}
       </AnimatePresence>

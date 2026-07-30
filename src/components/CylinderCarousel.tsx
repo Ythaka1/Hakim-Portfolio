@@ -8,7 +8,7 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Project } from "@/lib/data";
 
 /*
@@ -16,21 +16,55 @@ import type { Project } from "@/lib/data";
  *  - Cards sit on a virtual cylinder (rotateY(i·step) translateZ(radius)).
  *  - Continuous circular scroll: wheel / drag add angular velocity that
  *    decays with inertia damping; a slow idle drift keeps it alive.
- *  - Mouse parallax: the whole cylinder tilts on damped springs.
+ *  - Pointer parallax tilts the cylinder on damped springs — fine pointers
+ *    only; touch devices get drag + idle drift with no tilt.
  *  - Volumetric thickness: each card has an offset front + back face and a
  *    shaded rim. Front = project preview + label; back = role, stack, link.
- *  - Scene perspective: 1350px. Designed for a pure black background.
+ *  - Card metrics scale with the viewport so nothing clips at 360px.
+ *  - Every colour comes from a theme token: the page follows light/dark
+ *    while the cards stay dark in both, gaining a stronger edge in light.
  */
 
-const CARD_W = 264;
-const CARD_H = 350;
+const BASE_W = 264;
+const RATIO = 350 / 264;
 const THICKNESS = 7;
+
+function useCardMetrics() {
+  const [w, setW] = useState(BASE_W);
+
+  useEffect(() => {
+    const measure = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      // leave room for the ring to swing without clipping on narrow screens
+      const byWidth = vw * (vw < 640 ? 0.52 : 0.34);
+      const byHeight = (vh - 220) / RATIO;
+      setW(Math.max(140, Math.min(BASE_W, byWidth, byHeight)));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    window.addEventListener("orientationchange", measure);
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("orientationchange", measure);
+    };
+  }, []);
+
+  return { cardW: Math.round(w), cardH: Math.round(w * RATIO) };
+}
 
 export default function CylinderCarousel({ projects }: { projects: Project[] }) {
   const reduced = useReducedMotion();
+  const { cardW, cardH } = useCardMetrics();
+  const [fine, setFine] = useState(true);
+
+  useEffect(() => {
+    setFine(window.matchMedia("(pointer: fine)").matches);
+  }, []);
+
   const n = projects.length;
   const step = 360 / n;
-  const radius = Math.round(CARD_W / 2 / Math.tan(Math.PI / n)) + 60;
+  const radius = Math.round(cardW / 2 / Math.tan(Math.PI / n)) + Math.round(cardW * 0.23);
 
   const rotation = useMotionValue(0);
   const velocity = useRef(0); // deg per frame @60fps
@@ -43,12 +77,13 @@ export default function CylinderCarousel({ projects }: { projects: Project[] }) 
     const dt = Math.min(delta, 50) / 16.7;
     if (!dragging.current) {
       // inertia damping toward the idle drift
-      velocity.current = velocity.current * Math.pow(0.955, dt) + IDLE * (1 - Math.pow(0.955, dt));
+      velocity.current =
+        velocity.current * Math.pow(0.955, dt) + IDLE * (1 - Math.pow(0.955, dt));
       rotation.set(rotation.get() + velocity.current * dt);
     }
   });
 
-  // pointer parallax tilt with inertia damping
+  // pointer parallax tilt with inertia damping (fine pointers only)
   const tiltX = useMotionValue(0);
   const panY = useMotionValue(0);
   const tiltXs = useSpring(tiltX, { stiffness: 60, damping: 18, mass: 0.9 });
@@ -58,7 +93,8 @@ export default function CylinderCarousel({ projects }: { projects: Project[] }) 
     const rect = e.currentTarget.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
-    if (!reduced) {
+    // no tilt on touch: it would fight the drag and jitter with the finger
+    if (!reduced && fine && e.pointerType !== "touch") {
       tiltX.set(py * -9);
       panY.set(px * 26);
     }
@@ -72,7 +108,7 @@ export default function CylinderCarousel({ projects }: { projects: Project[] }) 
 
   return (
     <div
-      className="relative flex h-full w-full touch-pan-y items-center justify-center select-none"
+      className="relative flex h-full w-full touch-pan-y select-none items-center justify-center"
       style={{ perspective: 1350 }}
       onPointerDown={(e) => {
         dragging.current = true;
@@ -98,8 +134,8 @@ export default function CylinderCarousel({ projects }: { projects: Project[] }) 
       <motion.div
         className="relative"
         style={{
-          width: CARD_W,
-          height: CARD_H,
+          width: cardW,
+          height: cardH,
           transformStyle: "preserve-3d",
           rotateY: rotation,
           rotateX: tiltXs,
@@ -107,12 +143,18 @@ export default function CylinderCarousel({ projects }: { projects: Project[] }) 
         }}
       >
         {projects.map((p, i) => (
-          <Card key={p.title} project={p} angle={i * step} radius={radius} rotation={rotation} />
+          <Card
+            key={p.title}
+            project={p}
+            angle={i * step}
+            radius={radius}
+            rotation={rotation}
+          />
         ))}
       </motion.div>
 
-      <p className="pointer-events-none absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.35em] text-white/30">
-        drag · scroll · flip
+      <p className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-center text-[10px] uppercase tracking-[0.35em] text-muted md:bottom-10">
+        {fine ? "drag · scroll · flip" : "swipe to explore"}
       </p>
     </div>
   );
@@ -136,6 +178,9 @@ function Card({
     return 0.45 + 0.55 * (front + 1) * 0.5;
   });
 
+  const face =
+    "absolute inset-0 overflow-hidden rounded-2xl border";
+
   return (
     <motion.div
       className="absolute inset-0"
@@ -147,8 +192,11 @@ function Card({
     >
       {/* rim — fakes machined card thickness */}
       <div
-        className="absolute inset-0 rounded-2xl bg-neutral-700/60"
-        style={{ transform: `translateZ(${-THICKNESS}px) scale(1.012)` }}
+        className="absolute inset-0 rounded-2xl"
+        style={{
+          transform: `translateZ(${-THICKNESS}px) scale(1.012)`,
+          backgroundColor: "var(--card-rim)",
+        }}
         aria-hidden
       />
 
@@ -156,8 +204,14 @@ function Card({
           Drop the real preview (video/image) in /public/images as
           e.g. project-01-preview.jpg — see src/lib/data.ts */}
       <div
-        className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl border border-white/12 bg-neutral-950"
-        style={{ transform: `translateZ(${THICKNESS}px)`, backfaceVisibility: "hidden" }}
+        className={`${face} flex flex-col`}
+        style={{
+          transform: `translateZ(${THICKNESS}px)`,
+          backfaceVisibility: "hidden",
+          backgroundColor: "var(--card-bg)",
+          borderColor: "var(--card-border)",
+          boxShadow: "var(--card-shadow)",
+        }}
       >
         <div
           className="relative flex-1"
@@ -167,29 +221,48 @@ function Card({
           }}
           data-asset={project.preview}
         >
-          <span className="absolute bottom-2 right-3 font-mono text-[9px] text-white/25">
+          <span
+            className="absolute bottom-2 right-3 font-mono text-[9px]"
+            style={{ color: "var(--card-fg-dim)" }}
+          >
             {project.preview}
           </span>
         </div>
-        <div className="flex items-end justify-between border-t border-white/10 px-4 py-3">
-          <span className="font-display text-lg text-white/90">{project.title}</span>
-          <span className="text-[10px] tracking-[0.2em] text-white/40">{project.year}</span>
+        <div
+          className="flex items-end justify-between border-t px-4 py-3"
+          style={{ borderColor: "var(--card-hairline)" }}
+        >
+          <span
+            className="font-display text-base md:text-lg"
+            style={{ color: "var(--card-fg)" }}
+          >
+            {project.title}
+          </span>
+          <span
+            className="text-[10px] tracking-[0.2em]"
+            style={{ color: "var(--card-fg-dim)" }}
+          >
+            {project.year}
+          </span>
         </div>
       </div>
 
       {/* BACK — role, stack, link */}
       <div
-        className="absolute inset-0 flex rotate-y-180 flex-col justify-between overflow-hidden rounded-2xl border border-white/12 bg-neutral-950 p-5"
+        className={`${face} flex flex-col justify-between p-4 md:p-5`}
         style={{
           transform: `rotateY(180deg) translateZ(${THICKNESS}px)`,
           backfaceVisibility: "hidden",
+          backgroundColor: "var(--card-bg)",
+          borderColor: "var(--card-border)",
+          boxShadow: "var(--card-shadow)",
         }}
       >
         <div>
           <p className="eyebrow mb-3">{project.role}</p>
           <ul className="space-y-1.5">
             {project.stack.map((s) => (
-              <li key={s} className="text-sm text-white/60">
+              <li key={s} className="text-sm" style={{ color: "var(--card-fg-dim)" }}>
                 {s}
               </li>
             ))}
@@ -198,7 +271,8 @@ function Card({
         {/* href="#" placeholder — point at the live project later */}
         <a
           href={project.href}
-          className="text-[11px] uppercase tracking-[0.25em] text-white/70 transition-colors duration-400 hover:text-[#c2a25f]"
+          className="inline-flex min-h-[44px] items-center text-[11px] uppercase tracking-[0.25em] transition-colors duration-400 hover:text-accent"
+          style={{ color: "var(--card-fg)" }}
         >
           view project ↗
         </a>

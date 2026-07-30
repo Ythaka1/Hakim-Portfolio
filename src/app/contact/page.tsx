@@ -54,7 +54,7 @@ export default function Contact() {
           href={`mailto:${EMAIL}`}
           onMouseEnter={tick}
           style={{ x, y }}
-          className="font-display text-center text-[clamp(1.35rem,5.2vw,4.8rem)] leading-[1.1] break-all md:break-normal transition-colors duration-500 hover:text-accent"
+          className="font-display flex min-h-[44px] max-w-full items-center break-words px-2 py-2 text-center text-[clamp(1.5rem,5.6vw,4.4rem)] leading-[1.2] transition-colors duration-500 hover:text-accent md:break-normal"
           initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 1.1, ease: EASE, delay: 0.25 }}
@@ -75,7 +75,7 @@ export default function Contact() {
             <a
               href={s.href}
               onMouseEnter={tick}
-              className="text-[11px] uppercase tracking-[0.3em] text-muted transition-colors duration-400 hover:text-accent"
+              className="flex min-h-[44px] items-center text-[11px] uppercase tracking-[0.3em] text-muted transition-colors duration-400 hover:text-accent"
             >
               {s.label}
             </a>
