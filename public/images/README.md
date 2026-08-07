@@ -6,7 +6,7 @@ variant that cross-fade with the theme toggle.
 | File | Where it appears |
 | --- | --- |
 | `hero-cross-blur.jpg` / `hero-cross-blur-light.jpg` | Hero backdrop (heavily blurred, low contrast) |
-| `portrait-front.png` | Hero — the framed portrait above every role panel (same image on all five, single plain file, no dark/light pair) |
+| `portrait-front.png` | **The portrait.** Used by every frame on the site: all five hero role panels and both About profiles (the second is the same file CSS-mirrored). Replace this one file to change the portrait everywhere — the path lives in `PORTRAIT` in `src/lib/assets.ts`. |
 | `portrait-profile.jpg` / `portrait-profile-light.jpg` | About — **both** profiles. One graded portrait; the second one is the same file CSS-mirrored (`scaleX(-1)`) so it faces the other way. Do not add a separate mirrored file. |
 | `project-01-preview.jpg` … `project-06-preview.jpg` | Works — carousel card fronts (video also fine; adjust `CylinderCarousel`) |
 

@@ -13,6 +13,10 @@ export type PairedAsset = {
   alt: string;
 };
 
+/* The single portrait of Hakim. Replace this one file in
+   public/images/ and every frame on the site updates with it. */
+export const PORTRAIT = "/images/portrait-front.png";
+
 export const ASSETS = {
   /* hero-cross-blur.jpg — heavily blurred, low-contrast image of Jesus
      carrying the cross. Used as the hero backdrop. */
@@ -22,15 +26,16 @@ export const ASSETS = {
     alt: "",
   },
 
-  /* portrait-profile.jpg — ONE graded profile portrait. Both about-page
-     profiles come from this single file; the opposite-facing version is
-     the same image CSS-mirrored with scaleX(-1), never a second download. */
+  /* The one portrait, used everywhere: hero frames and both about-page
+     profiles all read this single file. The second about profile is the
+     same image CSS-mirrored with scaleX(-1), never a second download.
+     Same file in both themes — swap the file to swap the whole site. */
   portraitProfile: {
-    dark: "/images/portrait-profile.jpg",
-    light: "/images/portrait-profile-light.jpg",
+    dark: PORTRAIT,
+    light: PORTRAIT,
     alt: "Portrait of Hakim",
   },
 } satisfies Record<string, PairedAsset>;
 
-/* The hero panel frames use a single plain image, not a paired swap:
-   public/images/portrait-front.png → served at /images/portrait-front.png */
+/* The hero panel frames use PORTRAIT directly as a plain <img>, not a
+   paired swap — see PortraitFrame in src/app/page.tsx. */

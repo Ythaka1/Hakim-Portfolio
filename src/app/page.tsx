@@ -10,7 +10,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import PairedImage from "@/components/PairedImage";
 import { TransitionLink } from "@/components/transition";
-import { ASSETS } from "@/lib/assets";
+import { ASSETS, PORTRAIT } from "@/lib/assets";
 import { HERO_QUOTES } from "@/lib/data";
 
 /*
@@ -200,7 +200,7 @@ function PortraitFrame() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imgRef}
-          src="/images/portrait-front.png"
+          src={PORTRAIT}
           alt={missing ? "" : "Hakim"}
           onError={() => setMissing(true)}
           className={`h-full w-full object-cover transition-opacity duration-500 ${
